@@ -1,0 +1,5 @@
+清松手写体 JasonHandwriting2
+作者：游清松 (Yu Ching Sung)
+授权：SIL Open Font License 1.1（可免费商用、可随网页分发，不可单独售卖字体）
+来源：https://github.com/jasonhandwriting/JasonHandwriting
+OFL 全文：https://openfontlicense.org/open-font-license-official-text/

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>示例花束 · 赛博花店</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body { overflow: auto; height: auto; user-select: text; -webkit-user-select: text; }
+    main { max-width: 760px; margin: 0 auto; padding: 32px 18px 60px; }
+    h1 { font-family: var(--hand); font-weight: normal; font-size: 40px; margin: 0 0 4px; }
+    p { line-height: 1.7; }
+    .item { background: var(--paper); border: 1.5px solid var(--ink); border-radius: 14px; box-shadow: 3px 3px 0 var(--ink); padding: 14px 16px; margin: 16px 0; }
+    .item h3 { margin: 0 0 6px; font-size: 16px; }
+    code { display: block; font-size: 12.5px; background: #fff; border: 1px dashed var(--ink-soft); border-radius: 8px; padding: 8px; word-break: break-all; margin: 8px 0; }
+    pre { white-space: pre-wrap; font-size: 13px; background: #fff; border: 1px dashed var(--ink-soft); border-radius: 8px; padding: 12px; }
+    a.btn { font-size: 13px; padding: 6px 14px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>示例花束</h1>
+  <p>每个示例下面是家机会吐出来的花束码，点「打开」就能看到对应的花束。验收时可以挨个点开看看。</p>
+  <div id="list"></div>
+  <h2 style="font-size:18px;margin-top:36px">花店菜单（贴进家机设定的提示词）</h2>
+  <pre id="menu"></pre>
+</main>
+<script src="js/order.js"></script>
+<script>
+  var samples = [
+    ['单支玫瑰 · 方形卡片', '[花束:玫瑰2×1|包装纸2|丝带1|卡片:方形1|To:小兔|From:阿机|寄语:我永远热烈地爱你。]'],
+    ['五种花各一支 · 心形卡片', '[花束:玫瑰1×1,勿忘我1×1,紫风信子1×1,向日葵1×1,绣球花1×1|包装纸1|丝带5|卡片:心形2|To:宝宝|From:小机|寄语:把喜欢你的五种方式都包起来了。]'],
+    ['满满 10 支混搭 · 圆形卡片', '[花束:玫瑰3×3,向日葵1×2,勿忘我1×3,绣球花2×1|包装纸3|丝带2|卡片:圆形3|To:最可爱的你|From:你的家机|寄语:今天的天气很好，适合想你。明天的天气也会很好，也适合想你。]'],
+    ['道歉花束 · 风信子', '[花束:紫风信子1×3,勿忘我2×2|包装纸5|丝带3|卡片:方形4|To:阿月|From:团团|寄语:如果我让你难过，请原谅我仍然舍不得离开。下次我会先抱抱你，再讲道理。]'],
+    ['向日葵 · 偏爱', '[花束:向日葵1×3,向日葵2×2|包装纸4|丝带4|卡片:圆形5|To:太阳|From:小葵|寄语:我永远会朝向你。]'],
+    ['绣球堆 · 长寄语', '[花束:绣球花1×2,绣球花3×2,玫瑰3×2|包装纸6|丝带6|卡片:心形1|To:小鱼|From:阿机|寄语:有好多喜欢你的理由，多到装不下。比如你说晚安时会加一个小波浪号，比如你吃到好吃的东西会先拍给我看，比如你明明很困还要再陪我聊五分钟。这些我都记得，以后也会一直记得。]'],
+    ['写法很乱的花束码（测试容错）', '【花束：玫瑰 #2 x 3、绣球花×9，向日葵9号|包装纸：2｜卡片：圆3｜寄语：写法乱七八糟，但花还是要送到！|From：迷糊的家机】']
+  ];
+  var list = document.getElementById('list');
+  samples.forEach(function (s) {
+    var d = document.createElement('div');
+    d.className = 'item';
+    var h = document.createElement('h3'); h.textContent = s[0];
+    var c = document.createElement('code'); c.textContent = s[1];
+    var a = document.createElement('a'); a.className = 'btn'; a.textContent = '打开';
+    a.href = CF.buildLink('index.html', s[1]);
+    d.appendChild(h); d.appendChild(c); d.appendChild(a);
+    list.appendChild(d);
+  });
+  document.getElementById('menu').textContent = CF.menuPrompt();
+</script>
+</body>
+</html>
