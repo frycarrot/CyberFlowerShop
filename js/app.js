@@ -178,8 +178,7 @@
 
   function loadFromHash() {
     var raw = location.hash.replace(/^#/, '');
-    var text = '';
-    try { text = decodeURIComponent(raw); } catch (e) { text = raw; }
+    var text = CF.decodeHash(raw);
     var isDemo = !/花束/.test(text);
     var res = CF.parseMarker(isDemo ? DEMO : text);
     order = res.order;
@@ -473,12 +472,14 @@
   $('btnPaste').onclick = function () {
     $('paste').classList.remove('hidden');
     var raw = location.hash.replace(/^#/, '');
-    try { $('pasteText').value = raw ? decodeURIComponent(raw) : ''; } catch (e) { $('pasteText').value = ''; }
+    $('pasteText').value = CF.decodeHash(raw);
   };
   $('pasteClose').onclick = function () { $('paste').classList.add('hidden'); };
   $('paste').addEventListener('click', function (e) { if (e.target === $('paste')) $('paste').classList.add('hidden'); });
   $('pasteGo').onclick = function () {
-    var text = $('pasteText').value;
+    var text = $('pasteText').value.trim();
+    if (/^https?:\/\//i.test(text) && text.indexOf('#') >= 0) text = text.slice(text.indexOf('#') + 1);
+    if (!CF.findMarkers(text).length) text = CF.decodeHash(text);
     var found = CF.findMarkers(text);
     var marker = found.length ? found[0].text : text.trim();
     if (!/花束/.test(marker)) { toast('没找到花束码哦，它长这样：[花束:玫瑰1×3|...|寄语:...]', 4000); return; }
@@ -486,7 +487,10 @@
     var next = '#' + encodeURIComponent(marker);
     if (location.hash === next) loadFromHash(); else location.hash = next;
   };
-  $('copyLink').onclick = function () { copy(location.href, '链接已复制'); };
+  $('copyLink').onclick = function () {
+    var marker = CF.decodeHash(location.hash);
+    copy(marker ? CF.buildLink(location.href, marker) : location.href, '链接已复制');
+  };
   $('copyMenu').onclick = function () { copy(CF.menuPrompt(), '菜单已复制，贴进家机的设定里吧'); };
   window.addEventListener('hashchange', loadFromHash);
   window.addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (cardState === 'open') closeCard(); closeAll(); } });
@@ -535,3 +539,4 @@
   requestAnimationFrame(loop);
   window.__cf = { renderFrame: renderFrame, view: view, get B() { return B; } };
 })();
+

@@ -295,6 +295,23 @@
     return String(base).replace(/#.*$/, '') + '#' + encodeURIComponent(marker);
   }
 
+  /** Decode transported hash layers until the marker header is readable.
+   * Stop at the header so literal percent sequences in a valid message stay literal.
+   * Decode runs independently: a bare percent or damaged UTF-8 must not block other fields.
+   */
+  function decodeHash(raw) {
+    var text = String(raw || '').replace(/^#/, '').trim();
+    var header = new RegExp('^' + START.source);
+    for (var layer = 0; layer < 5 && !header.test(text); layer++) {
+      var next = text.replace(/(?:%[0-9a-f]{2})+/gi, function (run) {
+        try { return decodeURIComponent(run); } catch (e) { return run; }
+      }).trim();
+      if (next === text) break;
+      text = next;
+    }
+    return text;
+  }
+
   /**
    * 在一大段聊天文本里找出所有花束标记（给前端正则替换用）。
    * 结尾取「寄语之后、下一个标记之前」的最后一个右括号，所以寄语里出现 ] 也不会截断。
@@ -340,8 +357,9 @@
   var api = {
     CATALOG: CATALOG, DEFAULT_ORDER: DEFAULT_ORDER,
     parseMarker: parseMarker, toMarker: toMarker, buildLink: buildLink,
-    findMarkers: findMarkers, menuPrompt: menuPrompt
+    findMarkers: findMarkers, menuPrompt: menuPrompt, decodeHash: decodeHash
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.CF = Object.assign(root.CF || {}, api);
 })(typeof window !== 'undefined' ? window : globalThis);
+
