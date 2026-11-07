@@ -235,15 +235,16 @@ svg .fill { fill: currentColor; stroke: none; }
 .letter.square .letter-msg { margin-right: -12%; }
 .letter-to { font-size: 30px; line-height: 1.1; }
 .letter-msg {
-  flex: 1; overflow-y: auto; margin: 6px 0;
+  flex: 1; min-height: 0; overflow-y: auto; margin: 6px 0;
   font-family: var(--cn-hand);
   font-size: var(--msg-size, 26px);
-  display: flex; flex-direction: column; justify-content: center;
-  scrollbar-width: thin;
+  display: flex; flex-direction: column; justify-content: flex-start;
+  scrollbar-width: none;
 }
+.letter-msg::-webkit-scrollbar { display: none; }
 /* 每行下面一条手绘感的虚线 */
 .letter-msg > span {
-  position: relative; display: block;
+  position: relative; display: block; flex: none; margin-block: auto;
   line-height: var(--lh);
   white-space: pre-wrap; word-break: break-word;
 }
@@ -305,3 +306,4 @@ svg .fill { fill: currentColor; stroke: none; }
   .brand-en { font-size: 40px; }
   .to-line { font-size: 36px; }
 }
+
